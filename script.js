@@ -1,8 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     const gridDisplay = document.querySelector('.grid')
     const scoreDisplay = document.getElementById('score')
-    
+    const resultDisplay = document.getElementById('result')
+
     let squares = []
+    
     let score = 0
 
     function createBoard() {
@@ -38,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 //console.log(row)
 
-                let filteredRow = row.filter(x => x != 0)
+                let filteredRow = row.filter(num => num)
                 //console.log(filteredRow)
                 let missing = 4 - filteredRow.length
                 let zeros = Array(missing).fill(0)
@@ -66,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 let row = [totalOne,totalTwo,totalThree,totalFour]
 
 
-                let filteredRow = row.filter(x => x != 0)
+                let filteredRow = row.filter(num => num)
                 let missing = 4 - filteredRow.length
                 let zeros = Array(missing).fill(0)
                 let newRow = filteredRow.concat(zeros)
@@ -91,9 +93,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 scoreDisplay.innerHTML = score
             }
         }
+        checkWin()
     }
 
-    checkWin()
+    
 
     function moveDown(){
         
@@ -104,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let totalFour = parseInt(squares[i+4*3].innerHTML)
             let column = [totalOne,totalTwo,totalThree,totalFour]
 
-            let filteredColumn = column.filter(x => x!=0 )
+            let filteredColumn = column.filter(num => num )
             let missing = 4 - filteredColumn.length
             let zeros = Array(missing).fill(0)
             let newColumn = zeros.concat(filteredColumn)
@@ -139,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function sumColumn(){
         for (let i=0; i <12; i++){ //end before index 12 because is has no "below neighbour"
-            if(squares[i].innerHTML == squares[i+4].innerHTML){
+            if(squares[i].innerHTML === squares[i+4].innerHTML){
                 let combineNum = parseInt(squares[i].innerHTML) + parseInt(squares[i+4].innerHTML)
                 squares[i].innerHTML = combineNum
                 squares[i+4].innerHTML = 0
@@ -195,24 +198,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function checkWin(){
-        for(let i=0; i < 16; i++){
+        for(let i=0; i < squares.length; i++){
             if (squares[i].innerHTML == 2048){
-                alert('Congratulations!! Refresh the page to play again.')
-                document.removeEventListener('keyup', control)
+                resultDisplay.innerHTML = 'You WIN'
+        document.removeEventListener('keyup', control)
+        setTimeout(() => clear(), 3000)
             }
         }
     }
 
     function checkLose(){
         let numZeros = 0
-        for(let i = 0; i<16; i++){
-            if(squares[i].innerHTML==0){
+        for (let i=0; i < squares.length; i++) {
+            if (squares[i].innerHTML == 0) {
                 numZeros++
             }
         }
         if(numZeros===0){
-            alert('Game Over!! Refresh the page to play again.')
+            resultDisplay.innerHTML = 'You LOSE'
             document.removeEventListener('keyup', control)
+            setTimeout(() => clear(), 3000)
         }
     }
 })
